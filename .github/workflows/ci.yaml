@@ -8,7 +8,10 @@ jobs:
       - name: ci_run
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerhub_token : ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
           # Build Docker image
-          docker build --tag chatroom-server:latest .
-          docker login -u siriine -p 
+          docker build --tag siriine/chatroom-server:latest .
+          docker login -u siriine -p $dockerhub_token
+          docker push siriine/chatroom-server:latest
+          
