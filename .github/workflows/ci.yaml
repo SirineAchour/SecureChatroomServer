@@ -1,0 +1,14 @@
+name: project-ci
+on: [push]
+jobs:
+  run:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - name: ci_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Build Docker image
+          docker build --tag chatroom-server:latest .
+          docker login -u siriine -p 
