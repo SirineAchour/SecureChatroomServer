@@ -16,7 +16,7 @@ class LdapService:
         # If we want to be associated to an account
         # you can log by binding your account details to your connection
 
-        self.con.simple_bind_s("cn=admin,dc=chat,dc=app", "chatapp")
+        self.con.simple_bind_s("cn=Manager,dc=chat,dc=app", "chatapp")
         print "LDAP Server Listening...."
 
     def add_user(self,user):

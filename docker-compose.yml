@@ -11,8 +11,8 @@ services:
     networks:
       - mynet
     environment:
-      - OPENLDAP_ROOT_DN_SUFFIX: "dc=chat,dc=app"
-      - OPENLDAP_ROOT_DN_PREFIX: "cn=admin"
+      OPENLDAP_ROOT_DN_SUFFIX: "dc=chat,dc=app"
+      OPENLDAP_ROOT_DN_PREFIX: "cn=Manager"
 
   chat-server:
     container_name: chat-server
