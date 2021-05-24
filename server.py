@@ -56,24 +56,40 @@ def get_ca_pk() :
 verify_cert = True
 client_pk = {}
 def gen_certificate(ind) : 
-
+    print "gonna generate certificate"
+    print "one_day : "
     one_day = datetime.timedelta(1, 0, 0)
+    print str(one_day)
 
+    print "reading pem_ca_cert :"
     pem_ca_cert = open('cert.pem','rb').read()
-    
+    print str(pem_ca_cert)
+
+    print "loading ca_cert :"
     ca_cert = x509.load_pem_x509_certificate(pem_ca_cert, default_backend())
 
+    print str(ca_cert)
 
-
+    print "reading pem_ca_key :"
     pem_ca_key = open('key.pem' , 'rb').read()
+    
+    print str(pem_ca_key)
     ca_key = serialization.load_pem_private_key(pem_ca_key, password = None,backend = default_backend())
+    print "serialized it"
 
-
+    print "readin pem_req_data :"
     pem_req_data = open("clientcsr" + str(ind) + ".pem",'rb').read()
+    print str(pem_req_data)
+    print "csr :"
     csr = x509.load_pem_x509_csr(pem_req_data, default_backend())
+    print str(csr)
 
     csr_public_key = csr.public_key()
 
+    print "public key : "
+    print str(csr_public_key)
+
+    print "on with the builder"
     builder = x509.CertificateBuilder()
     builder = builder.subject_name(csr.subject)
     builder = builder.issuer_name(ca_cert.subject)
@@ -81,16 +97,20 @@ def gen_certificate(ind) :
     builder = builder.not_valid_after(datetime.datetime(2018, 8, 2))
     builder = builder.serial_number(utils.int_from_bytes(os.urandom(20), "big") >> 1)
     builder = builder.public_key(csr_public_key)
+    print "extensions"
     for ext in csr.extensions :
         builder = builder.add_extension(ext.value , ext.critical)
+    print "signing the cert"
     certificate = builder.sign(
         private_key=ca_key, algorithm=hashes.SHA256(),
         backend=default_backend()
     )
 
+    print "writing the cert"
     certificatepem = "certificate" + str(ind) + ".pem"
     with open(certificatepem, "wb") as f:
         f.write(certificate.public_bytes(serialization.Encoding.PEM))
+    print str(certificatepem)
     return certificate.public_bytes(serialization.Encoding.PEM),csr_public_key,ca_key
 
 
