@@ -10,7 +10,7 @@ class LdapService:
 
     def connect_ldap(self):
         print "INITIALIZING LDAP SERVER ...."
-        self.con = ldap.initialize('ldap://ldap-server')
+        self.con = ldap.initialize('ldaps://ldap-server')
 
         # At this point, we're connected as an anonymous user
         # If we want to be associated to an account

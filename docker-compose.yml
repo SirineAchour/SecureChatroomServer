@@ -1,0 +1,27 @@
+version: '2.3' # specify docker-compose version
+
+# Define the services/containers to be run
+services:
+  ldap-server:
+    container_name: ldap-server
+    image: openshift/openldap-2441-centos7
+    ports:
+      - 389:389
+      - 636:636
+    networks:
+      - mynet
+    environment:
+      - OPENLDAP_ROOT_DN_SUFFIX: "dc=chat,dc=app"
+      - OPENLDAP_ROOT_DN_PREFIX: "cn=admin"
+
+  chat-server:
+    container_name: chat-server
+    image: siriine/chatroom-server
+    ports:
+      - 1001:1001
+    networks:
+      - mynet
+networks:
+  mynet:
+    driver: bridge
+     
