@@ -7,7 +7,9 @@ class LdapService:
     con=None
 
     def __init__(self):
+        print "in ldapservice constructor"
         self.connect_ldap()
+        print "done constructing"
 
     def connect_ldap(self):
         print "INITIALIZING LDAP SERVER ...."
@@ -37,6 +39,7 @@ class LdapService:
             }
         #USE "strongAuthenticationUser" objectClass for Certification, it needs a binary file,
         # addModList transforms your dictionary into a list that is conform to ldap input.
+        print "about to add user"
         result = self.con.add_s(dn, ldap.modlist.addModlist(modlist))
         print "User ADDED!"
         print "Result : "+str(result)
@@ -49,6 +52,7 @@ class LdapService:
         self.con.delete_s(dn)
 
     def search_user(self,uid):
+        print "Gonna Search for user"
         ldap_base = "ou=Users,dc=chat,dc=app"
         query = "(uid="+uid+")"
         try:

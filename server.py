@@ -108,6 +108,7 @@ def send_file(sock , file) :
       
     f.close()
     sock.recv(1)
+    print "done sending file"
 
 
 def send_msg(sock,msg) : 
@@ -168,13 +169,18 @@ def register_client(data,_id,sock) :
     email = recv_msg(sock)
     carte = recv_msg(sock)
     #here
+    print "about to load ldap service"
     ldapServ=LdapService()
+    print "got ldap service"
+    print str(ldapServ)
     user=User(login,login,login,email,password,carte,certificate)
+    print "loaded user object"
     ldapServ.add_user(user)
     
     client_pk[login] = public_key
-
+    print "set publilc key "
     newclient = myclient(_id,login,public_key,certificate)
+    print "screated new client"
     clients.append(newclient)
     send_msg(sock,'YES')
     return login,password
@@ -233,7 +239,7 @@ def chat_server():
         ready_to_read,ready_to_write,in_error = select.select(SOCKET_LIST,[],[],0)
 
         for sock in ready_to_read:
-
+            print "in for loop"
             if sock == server_socket:
                 sockfd, addr = server_socket.accept()
                 SOCKET_LIST.append(sockfd)
@@ -242,20 +248,31 @@ def chat_server():
                 print "user (%s, %s) connected" % addr
 
             else:
+                print "in else"
                 try:
+                    print "gonna try to receive msg"
                     data = recv_msg(sock)
+                    print "got message containing data"
+                    print "data :"
+                    print str(data[3:6])
                     if data:
                         _id = data [:3]
                         if data[3:6] == 'csr' :
-
+                            print "in new client"
                             reglogin,regpassword = register_client(data[6:],_id,sock)
+                            print "done with new client"
 
-                        elif data[3:6] == 'aut' : 
+                        elif data[3:6] == 'aut' :
+                            print "about to log an old client" 
                             login,password = auth_client(sock,_id)
                             print login + " + " +password
+                            print "done with login"
                         elif data[3:6] == 'msg' : 
+                            print "gonna wait for msg"
                             reciever = recv_msg(sock)
+                            print "gonna transmit msg"
                             transmit_msg(_id,reciever,sock)
+                            print "done transmitting l msg"
                         
 
 
