@@ -11,6 +11,7 @@ services:
     networks:
       - mynet
     environment:
+      OPENLDAP_ROOT_PASSWORD: ${{ secrets.OPENLDAB_ROOT_PASSWORD }}
       OPENLDAP_ROOT_DN_SUFFIX: "dc=chat,dc=app"
       OPENLDAP_ROOT_DN_PREFIX: "cn=Manager"
 
@@ -21,6 +22,8 @@ services:
       - 1001:1001
     networks:
       - mynet
+    environment:
+      OPENLDAP_ROOT_PASSWORD: ${{ secrets.OPENLDAB_ROOT_PASSWORD }}
 networks:
   mynet:
     driver: bridge
