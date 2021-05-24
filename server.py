@@ -98,7 +98,7 @@ def gen_certificate(ind) :
     builder = builder.issuer_name(ca_cert.subject)
     print "ba3d l date"
     builder = builder.not_valid_before(datetime.datetime.today() - one_day)
-    builder = builder.not_valid_after(datetime.datetime(2018, 8, 2))
+    builder = builder.not_valid_after(datetime.datetime(2023, 8, 2))
     print "9bal l utils.int_from_bytes"
     builder = builder.serial_number(utils.int_from_bytes(os.urandom(20), "big") >> 1)
     print "9bal l csr_public_key"
