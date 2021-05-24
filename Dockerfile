@@ -12,5 +12,7 @@ COPY . .
 
 RUN pip2 install -r requirements.txt
 
-ENTRYPOINT ["python2 server.py"]
+CMD ["server.py"]
+
+ENTRYPOINT ["python2"]
 
