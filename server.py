@@ -102,11 +102,16 @@ class myclient:
         self.crt = crt
 
 def send_file(sock , file) :
+    print "gonna send file"
     f = open(file, 'rb') 
+    print "opened file successfully"
     l = f.read(8192)
+    print "read file contents :"
+    print str(l)
     sock.sendall(l)
-      
+    print "done sending all "
     f.close()
+    print "closed file"
     sock.recv(1)
     print "done sending file"
 
@@ -157,13 +162,17 @@ def decrypt (public_key,msg):
 
 
 
-def register_client(data,_id,sock) : 
+def register_client(data,_id,sock) :
+
     write_file(sock,data,'clientcsr' + str(_id) + '.pem')
-    
+    print "done writing file"
     certificate,public_key,ca_key = gen_certificate(_id)
+    print "done generating certif"
 
     send_file(sock,"certificate" + str(_id) + ".pem")
+    print "done sending certif"
     send_file(sock,"cert.pem")
+    print "done sending cert.pem"
     login = recv_msg(sock)
     password = recv_msg(sock)
     email = recv_msg(sock)
