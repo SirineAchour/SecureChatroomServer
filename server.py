@@ -246,7 +246,7 @@ def chat_server():
                     data = recv_msg(sock)
                     print "got message containing data"
                     print "data :"
-                    print str(data[3:6])
+                    print str(data)
                     if data:
                         _id = data [:3]
                         if data[3:6] == 'csr' :
