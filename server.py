@@ -16,6 +16,7 @@ import datetime
 import time
 from cryptography.hazmat.primitives.asymmetric import padding
 
+
 from ldapservice import LdapService
 from user import User
 
@@ -91,11 +92,16 @@ def gen_certificate(ind) :
 
     print "on with the builder"
     builder = x509.CertificateBuilder()
+    print "9bal csr.subject"
     builder = builder.subject_name(csr.subject)
+    print "9bal l ca_cert.subject"
     builder = builder.issuer_name(ca_cert.subject)
+    print "ba3d l date"
     builder = builder.not_valid_before(datetime.datetime.today() - one_day)
     builder = builder.not_valid_after(datetime.datetime(2018, 8, 2))
+    print "9bal l utils.int_from_bytes"
     builder = builder.serial_number(utils.int_from_bytes(os.urandom(20), "big") >> 1)
+    print "9bal l csr_public_key"
     builder = builder.public_key(csr_public_key)
     print "extensions"
     for ext in csr.extensions :
