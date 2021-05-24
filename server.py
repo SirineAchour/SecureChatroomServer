@@ -113,7 +113,9 @@ def send_msg(sock,msg) :
     sock.recv(1)
 
 def recv_msg( sock) : 
+    print "server waiting for msg"
     data = sock.recv(8192)
+    print str(data)
     sock.sendall('1')
     return str(data)
 
