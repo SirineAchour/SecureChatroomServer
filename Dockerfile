@@ -10,7 +10,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip2 install requirements.txt
+RUN pip2 install -r requirements.txt
 
 ENTRYPOINT ["python2 server.py"]
 
