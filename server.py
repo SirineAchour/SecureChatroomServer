@@ -38,13 +38,10 @@ VIEW = str(config.get('config', 'VIEW'))
 SOCKET_LIST = []
 CONNECTED_USERS=[]
 
-
 BUFFER_SIZE = 8192
 clients = []
 
-
 client_sockets = {}
-
 
 def get_ca_pk() :
     pem_ca_cert = open('cert.pem','rb').read()
@@ -53,55 +50,24 @@ def get_ca_pk() :
     ca_pk = ca_cert.public_key()
     return ca_pk
 
-
 verify_cert = True
 client_pk = {}
+
 def gen_certificate(ind) : 
-    print "gonna generate certificate"
-    print "one_day : "
     one_day = datetime.timedelta(1, 0, 0)
-    print str(one_day)
-
-    print "reading pem_ca_cert :"
     pem_ca_cert = open('cert.pem','rb').read()
-    print str(pem_ca_cert)
-
-    print "loading ca_cert :"
     ca_cert = x509.load_pem_x509_certificate(pem_ca_cert, default_backend())
-
-    print str(ca_cert)
-
-    print "reading pem_ca_key :"
     pem_ca_key = open('key.pem' , 'rb').read()
-    
-    print str(pem_ca_key)
     ca_key = serialization.load_pem_private_key(pem_ca_key, password = None,backend = default_backend())
-    print "serialized it"
-
-    print "readin pem_req_data :"
     pem_req_data = open("clientcsr" + str(ind) + ".pem",'rb').read()
-    print str(pem_req_data)
-    print "csr :"
     csr = x509.load_pem_x509_csr(pem_req_data, default_backend())
-    print str(csr)
-
     csr_public_key = csr.public_key()
-
-    print "public key : "
-    print str(csr_public_key)
-
-    print "on with the builder"
     builder = x509.CertificateBuilder()
-    print "9bal csr.subject"
     builder = builder.subject_name(csr.subject)
-    print "9bal l ca_cert.subject"
     builder = builder.issuer_name(ca_cert.subject)
-    print "ba3d l date"
     builder = builder.not_valid_before(datetime.datetime.today() - one_day)
     builder = builder.not_valid_after(datetime.datetime(2023, 8, 2))
-    print "9bal l utils.int_from_bytes"
     builder = builder.serial_number(utils.int_from_bytes(os.urandom(20), "big") >> 1)
-    print "9bal l csr_public_key"
     builder = builder.public_key(csr_public_key)
     print "extensions"
     for ext in csr.extensions :
@@ -117,8 +83,8 @@ def gen_certificate(ind) :
     with open(certificatepem, "wb") as f:
         f.write(certificate.public_bytes(serialization.Encoding.PEM))
     print str(certificatepem)
+    print "ALMOST DONE WIT CERT GEN"
     return certificate.public_bytes(serialization.Encoding.PEM),csr_public_key,ca_key
-
 
 class myclient:
     def __init__(self, ind,login,pk,crt):
@@ -141,12 +107,10 @@ def send_file(sock , file) :
     sock.recv(1)
     print "done sending file"
 
-
 def send_msg(sock,msg) : 
     data = str(msg)
     sock.sendall(data)
     sock.recv(1)
-
 
 def recv_msg( sock) : 
     data = sock.recv(8192)
@@ -169,6 +133,7 @@ def encrypt(public_key,msg):
     )
     )
     return ciphertext
+
 def decrypt (public_key,msg):
     data = public_key.decrypt(
     msg,
@@ -180,13 +145,6 @@ def decrypt (public_key,msg):
     )
 
     return data
-
-
-
-
-
-
-
 
 def register_client(data,_id,sock) :
 
@@ -215,11 +173,10 @@ def register_client(data,_id,sock) :
     client_pk[login] = public_key
     print "set publilc key "
     newclient = myclient(_id,login,public_key,certificate)
-    print "screated new client"
+    print "!!!!!!!!!!!!!!created new client"
     clients.append(newclient)
     send_msg(sock,'YES')
     return login,password
-
 
 def send_available_clients(sock,_id):
     for client in clients :
@@ -256,9 +213,7 @@ def transmit_msg(_id,reciever,sock) :
     msg = decrypt(ca_key,msg)
     msg = encrypt(client_pk[reciever],msg)
     send_msg(client_sockets[reciever],msg)
-    
-
-
+  
 def chat_server():
     ind = "100"
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -324,8 +279,6 @@ def chat_server():
                     continue
 
     server_socket.close()
-
-
 
 def broadcast (server_socket, sock, message):
     for socket in SOCKET_LIST:
