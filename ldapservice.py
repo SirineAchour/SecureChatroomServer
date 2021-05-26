@@ -14,6 +14,12 @@ class LdapService:
     def connect_ldap(self):
         print "INITIALIZING LDAP SERVER ...."
         self.con = ldap.initialize('ldaps://ldap-server')
+        print "gonna set protocol version"
+        self.con.protocol_version = ldap.VERSION3
+        print "gonna set option to "
+        print str (ldap.OPT_REFERRALS)
+        self.con.set_option(ldap.OPT_REFERRALS, 0)
+        
         print "BINDING TO LDAP SERVER ...."
         # At this point, we're connected as an anonymous user
         # If we want to be associated to an account
