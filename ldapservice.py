@@ -40,6 +40,8 @@ class LdapService:
         #USE "strongAuthenticationUser" objectClass for Certification, it needs a binary file,
         # addModList transforms your dictionary into a list that is conform to ldap input.
         print "about to add user"
+        print "self.con :"
+        print str(self.con)
         result = self.con.add_s(dn, ldap.modlist.addModlist(modlist))
         print "User ADDED!"
         print "Result : "+str(result)
@@ -52,7 +54,7 @@ class LdapService:
         self.con.delete_s(dn)
 
     def search_user(self,uid):
-        print "Gonna Search for user"
+        print "!!!!!!!!!Gonna Search for user"
         ldap_base = "ou=Users,dc=chat,dc=app"
         query = "(uid="+uid+")"
         try:
@@ -70,6 +72,7 @@ class LdapService:
                 card_number = result[0][1]['description']
                 email = result[0][1]['mail']
                 user = User(uid, name, lastname, email, password, card_number, "")
+                print "FOUND USER !"
                 return user
         except Exception as e:
             print "Error in SEARCH USER "+e

@@ -170,8 +170,9 @@ def register_client(data,_id,sock) :
     print str(ldapServ)
     user=User(login,login,login,email,password,carte,certificate)
     print "loaded user object"
+    print "adding user"
     ldapServ.add_user(user)
-    
+    print "done user added"
     client_pk[login] = public_key
     print "set publilc key "
     newclient = myclient(_id,login,public_key,certificate)
