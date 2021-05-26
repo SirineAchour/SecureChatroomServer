@@ -73,14 +73,15 @@ class LdapService:
         print "!!!!!!!!!Gonna Search for user"
         ldap_base = "ou=Users,dc=chat,dc=app"
         query = "(uid="+uid+")"
+        print "query :"
+        print str(query)
         try:
-            try:
-                result = self.con.search_s(ldap_base, ldap.SCOPE_SUBTREE, query)
-                self.con.unbind_s()
-            except ldap.LDAPError, error_message:
-                print "l error :"
-                print str(ldap.LDAPError)
-                print "Couldn't Connect. %s " % error_message
+            print " gonna actually search"
+            result = self.con.search_s(ldap_base, ldap.SCOPE_SUBTREE, query)
+            print "done l9it resultat"
+            print str(result)
+            print "gonna start unbinding"
+            self.con.unbind_s()
             print "Connection closed!"
             if result==[]:
                 print "User not found"
@@ -95,8 +96,9 @@ class LdapService:
                 user = User(uid, name, lastname, email, password, card_number, "")
                 print "FOUND USER !"
                 return user
-        except Exception as e:
-            print "Error in SEARCH USER "+e
-            return None
+        except ldap.LDAPError, error_message:
+            print "l error :"
+            print str(ldap.LDAPError)
+            print "Couldn't Connect. %s " % error_message
 
 

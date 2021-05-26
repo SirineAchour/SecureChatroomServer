@@ -196,6 +196,8 @@ def auth_client(sock,_id) :
     login = recv_msg(sock)
     password = recv_msg(sock)
     ldapServ = LdapService()
+    print "login :"
+    print str(login)
     user=ldapServ.search_user(login)
 
 
