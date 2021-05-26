@@ -5,7 +5,7 @@ import os
 
 class LdapService:
     con=None
-
+    created_group = False
     def __init__(self):
         print "in ldapservice constructor"
         self.connect_ldap()
@@ -15,15 +15,8 @@ class LdapService:
         try: 
             print "INITIALIZING LDAP SERVER ...."
             self.con = ldap.initialize('ldap://ldap-server')
-            print "gonna set protocol version"
             self.con.protocol_version = ldap.VERSION3
-            print "gonna set option to "
-            print str (ldap.OPT_REFERRALS)
             self.con.set_option(ldap.OPT_REFERRALS, 0)
-            
-            print "l env variable"
-            print str(os.getenv('OPENLDAP_ROOT_PASSWORD'))
-
             print "BINDING TO LDAP SERVER ...."
             # At this point, we're connected as an anonymous user
             # If we want to be associated to an account
@@ -31,6 +24,24 @@ class LdapService:
 
             self.con.simple_bind_s("cn=Manager,dc=chat,dc=app", os.getenv('OPENLDAP_ROOT_PASSWORD'))
             print "LDAP Server Listening...."
+
+            if not LdapService.created_group:
+                print "gonna start creating group"
+                fs_dn = 'dc=chat,dc=app'
+                groupname = 'Users'
+
+                attr = {}
+                attr['objectClass'] = ['group','top']
+                attr['groupType'] = '-2147483646'
+                attr['ou'] = groupname
+                attr['name'] = groupname
+                attr['sAMAccountName'] = groupname
+
+                ldif = ldap.modlist.addModlist(attr)
+                print "fott l ldif"
+                LdapService.created_group = True
+                print(l.add_s(fs_dn,ldif))
+                print "added group all good"
         except ldap.LDAPError, error_message:
             print "Couldn't Connect. %s " % error_message
 
