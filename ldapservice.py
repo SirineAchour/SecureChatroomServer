@@ -33,7 +33,6 @@ class LdapService:
                 attr = {}
                 attr['objectClass'] = ['top','organizationalunit']
                 #attr['groupType'] = '-2147483646'
-                attr['dn'] = "ou=Users,dc=chat,dc=app"
                 attr['ou'] = groupname
                 #attr['name'] = groupname
                 #attr['sAMAccountName'] = groupname
