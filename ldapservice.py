@@ -31,11 +31,12 @@ class LdapService:
                 groupname = 'Users'
 
                 attr = {}
-                attr['objectClass'] = ['group','top']
-                attr['groupType'] = '-2147483646'
+                attr['objectClass'] = ['top','organizationalunit']]
+                #attr['groupType'] = '-2147483646'
+                attr['dn'] = "ou=Users,dc=chat,dc=app"
                 attr['ou'] = groupname
-                attr['name'] = groupname
-                attr['sAMAccountName'] = groupname
+                #attr['name'] = groupname
+                #attr['sAMAccountName'] = groupname
 
                 ldif = ldap.modlist.addModlist(attr)
                 print "fott l ldif"
