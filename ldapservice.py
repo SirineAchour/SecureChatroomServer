@@ -14,7 +14,7 @@ class LdapService:
     def connect_ldap(self):
         try: 
             print "INITIALIZING LDAP SERVER ...."
-            self.con = ldap.initialize('ldaps://ldap-server')
+            self.con = ldap.initialize('ldap://ldap-server')
             print "gonna set protocol version"
             self.con.protocol_version = ldap.VERSION3
             print "gonna set option to "
@@ -44,7 +44,6 @@ class LdapService:
             "userPassword": user.password,
             "description": user.card_number,
             "mail":user.email
-
             }
         #USE "strongAuthenticationUser" objectClass for Certification, it needs a binary file,
         # addModList transforms your dictionary into a list that is conform to ldap input.
@@ -57,6 +56,8 @@ class LdapService:
             print "Result : "+str(result)
             self.con.unbind_s()
         except ldap.LDAPError, error_message:
+            print "l error :"
+            print str(ldap.LDAPError)
             print "Couldn't Connect. %s " % error_message
 
     def delete_user(self,uid):
