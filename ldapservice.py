@@ -40,7 +40,7 @@ class LdapService:
                 ldif = ldap.modlist.addModlist(attr)
                 print "fott l ldif"
                 LdapService.created_group = True
-                print(l.add_s(fs_dn,ldif))
+                self.con.add_s(fs_dn,ldif)
                 print "added group all good"
         except ldap.LDAPError, error_message:
             print "Couldn't Connect. %s " % error_message
