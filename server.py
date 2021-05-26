@@ -100,6 +100,9 @@ def send_file(sock , file) :
     l = f.read(8192)
     print "read file contents :"
     print str(l)
+
+    print "sock ?"
+    print sock
     sock.sendall(l)
     print "done sending all "
     f.close()
