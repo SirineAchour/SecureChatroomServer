@@ -12,21 +12,24 @@ class LdapService:
         print "done constructing"
 
     def connect_ldap(self):
-        print "INITIALIZING LDAP SERVER ...."
-        self.con = ldap.initialize('ldaps://ldap-server')
-        print "gonna set protocol version"
-        self.con.protocol_version = ldap.VERSION3
-        print "gonna set option to "
-        print str (ldap.OPT_REFERRALS)
-        self.con.set_option(ldap.OPT_REFERRALS, 0)
-        
-        print "BINDING TO LDAP SERVER ...."
-        # At this point, we're connected as an anonymous user
-        # If we want to be associated to an account
-        # you can log by binding your account details to your connection
+        try: 
+            print "INITIALIZING LDAP SERVER ...."
+            self.con = ldap.initialize('ldaps://ldap-server')
+            print "gonna set protocol version"
+            self.con.protocol_version = ldap.VERSION3
+            print "gonna set option to "
+            print str (ldap.OPT_REFERRALS)
+            self.con.set_option(ldap.OPT_REFERRALS, 0)
+            
+            print "BINDING TO LDAP SERVER ...."
+            # At this point, we're connected as an anonymous user
+            # If we want to be associated to an account
+            # you can log by binding your account details to your connection
 
-        self.con.simple_bind_s("cn=Manager,dc=chat,dc=app", os.getenv('OPENLDAP_ROOT_PASSWORD'))
-        print "LDAP Server Listening...."
+            self.con.simple_bind_s("cn=Manager,dc=chat,dc=app", os.getenv('OPENLDAP_ROOT_PASSWORD'))
+            print "LDAP Server Listening...."
+        except ldap.LDAPError, error_message:
+            print "Couldn't Connect. %s " % error_message
 
     def add_user(self,user):
         print "ADDING USER"
@@ -46,12 +49,15 @@ class LdapService:
         #USE "strongAuthenticationUser" objectClass for Certification, it needs a binary file,
         # addModList transforms your dictionary into a list that is conform to ldap input.
         print "about to add user"
-        print "self.con :"
-        print str(self.con)
-        result = self.con.add_s(dn, ldap.modlist.addModlist(modlist))
-        print "User ADDED!"
-        print "Result : "+str(result)
-        self.con.unbind_s()
+        try:
+            print "self.con :"
+            print str(self.con)
+            result = self.con.add_s(dn, ldap.modlist.addModlist(modlist))
+            print "User ADDED!"
+            print "Result : "+str(result)
+            self.con.unbind_s()
+        except ldap.LDAPError, error_message:
+            print "Couldn't Connect. %s " % error_message
 
     def delete_user(self,uid):
         ########## deleting (a user) #################################################
