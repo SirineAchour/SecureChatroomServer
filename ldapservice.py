@@ -13,8 +13,10 @@ class LdapService:
 
     def connect_ldap(self):
         try: 
+            print "setting certif options thing"
+            ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
             print "INITIALIZING LDAP SERVER ...."
-            self.con = ldap.initialize('ldap://ldap-server')
+            self.con = ldap.initialize('ldaps://ldap-server')
             print "gonna set protocol version"
             self.con.protocol_version = ldap.VERSION3
             print "gonna set option to "
