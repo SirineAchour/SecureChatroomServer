@@ -23,7 +23,7 @@ class LdapService:
             
             print "l env variable"
             print str(os.getenv('OPENLDAP_ROOT_PASSWORD'))
-            
+
             print "BINDING TO LDAP SERVER ...."
             # At this point, we're connected as an anonymous user
             # If we want to be associated to an account
@@ -74,8 +74,13 @@ class LdapService:
         ldap_base = "ou=Users,dc=chat,dc=app"
         query = "(uid="+uid+")"
         try:
-            result = self.con.search_s(ldap_base, ldap.SCOPE_SUBTREE, query)
-            self.con.unbind_s()
+            try:
+                result = self.con.search_s(ldap_base, ldap.SCOPE_SUBTREE, query)
+                self.con.unbind_s()
+            except ldap.LDAPError, error_message:
+                print "l error :"
+                print str(ldap.LDAPError)
+                print "Couldn't Connect. %s " % error_message
             print "Connection closed!"
             if result==[]:
                 print "User not found"
