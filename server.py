@@ -244,7 +244,7 @@ def chat_server():
                 SOCKET_LIST.append(sockfd)
                 send_msg(sockfd,ind)
                 ind = str(int(ind) + 1 )
-                print("user (%s, %s) connected" % addr)
+                print("user"+ str(addr)+"connected")
 
             else:
                 print("in else")

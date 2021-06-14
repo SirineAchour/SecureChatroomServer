@@ -45,8 +45,9 @@ class LdapService:
                 self.con.add_s(fs_dn,ldif)
                 print("added group all good")
             print("not gonna create group bc cv")
-        except ldap.LDAPError, error_message:
-            print("Couldn't Connect. %s " % error_message)
+        except ldap.LDAPError:
+            print("l error :")
+            print(str(ldap.LDAPError))
 
     def add_user(self,user):
         print("ADDING USER")
@@ -72,10 +73,9 @@ class LdapService:
             print("User ADDED!")
             print("Result : "+str(result))
             self.con.unbind_s()
-        except ldap.LDAPError, error_message:
+        except ldap.LDAPError:
             print("l error :")
             print(str(ldap.LDAPError))
-            print("Couldn't Connect. %s " % error_message)
 
     def delete_user(self,uid):
         ########## deleting (a user) #################################################
@@ -110,9 +110,9 @@ class LdapService:
                 user = User(uid, name, lastname, email, password, card_number, "")
                 print("FOUND USER !")
                 return user
-        except ldap.LDAPError, error_message:
+        except ldap.LDAPError:
             print("l error :")
             print(str(ldap.LDAPError))
-            print("Couldn't Connect. %s " % error_message)
+            #print("Couldn't Connect. " + str(error_message))
 
 
