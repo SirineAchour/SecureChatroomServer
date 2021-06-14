@@ -201,6 +201,10 @@ def register_client(data,_id,sock) :
 def send_available_clients(sock,_id):
     print("gonna send available clients")
     for client in clients :
+        print("client : ")
+        print(client)
+        print(client.ind)
+        print(client._id)
         if client.ind == _id :
             continue
         send_msg(sock,client.login)
