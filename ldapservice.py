@@ -106,14 +106,14 @@ class LdapService:
         name_surname = user.name+" "+user.surname
         modlist = {
             "objectClass": [b"inetOrgPerson",b"person"],
-            "uid": user.name.encode('utf-8'),
-            "sn": user.surname.encode('utf-8'),
-            "givenName": user.name.encode('utf-8'),
-            "cn": name_surname.encode('utf-8'),
-            "displayName": name_surname.encode('utf-8'),
-            "userPassword": user.password.encode('utf-8'),
-            "description": user.card_number.encode('utf-8'),
-            "mail":user.email.encode('utf-8')
+            "uid": user.name,
+            "sn": user.surname,
+            "givenName": user.name,
+            "cn": name_surname,
+            "displayName": name_surname,
+            "userPassword": user.password,
+            "description": user.card_number,
+            "mail":user.email
             }
         #USE "strongAuthenticationUser" objectClass for Certification, it needs a binary file,
         # addModList transforms your dictionary into a list that is conform to ldap input.
