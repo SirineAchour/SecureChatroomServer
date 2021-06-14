@@ -131,9 +131,9 @@ def recv_msg(sock) :
 
 def write_file(sock,data,file) :
     filename=str(file)
-        
     with open(filename,'wb') as f : 
         f.write(data)
+    print("done writing to file")
 
 def encrypt(public_key,msg):
     ciphertext = public_key.encrypt(
