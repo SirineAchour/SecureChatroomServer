@@ -7,26 +7,27 @@ class LdapService:
     con=None
     created_group = False
     def __init__(self):
-        print "in ldapservice constructor"
+        print("in ldapservice constructor")
         self.connect_ldap()
-        print "done constructing"
+        print("done constructing")
 
     def connect_ldap(self):
         try: 
-            print "INITIALIZING LDAP SERVER ...."
+            print("INITIALIZING LDAP SERVER ....")
             self.con = ldap.initialize('ldap://ldap-server')
             self.con.protocol_version = ldap.VERSION3
             self.con.set_option(ldap.OPT_REFERRALS, 0)
-            print "BINDING TO LDAP SERVER ...."
+            print("BINDING TO LDAP SERVER ....")
             # At this point, we're connected as an anonymous user
             # If we want to be associated to an account
             # you can log by binding your account details to your connection
-
+            print("l password :")
+            print(str(os.getenv('OPENLDAP_ROOT_PASSWORD')))
             self.con.simple_bind_s("cn=Manager,dc=chat,dc=app", os.getenv('OPENLDAP_ROOT_PASSWORD'))
-            print "LDAP Server Listening...."
+            print("LDAP Server Listening....")
 
             if not LdapService.created_group:
-                print "gonna start creating group"
+                print("gonna start creating group")
                 fs_dn = 'cn=Manager,dc=chat,dc=app'
                 groupname = 'Users'
 
@@ -38,17 +39,17 @@ class LdapService:
                 #attr['sAMAccountName'] = groupname
 
                 ldif = ldap.modlist.addModlist(attr)
-                print "fott l ldif"
+                print("fott l ldif")
                 LdapService.created_group = True
-                print "set created_group to true"
+                print("set created_group to true")
                 self.con.add_s(fs_dn,ldif)
-                print "added group all good"
-            print "not gonna create group bc cv"
+                print("added group all good")
+            print("not gonna create group bc cv")
         except ldap.LDAPError, error_message:
-            print "Couldn't Connect. %s " % error_message
+            print("Couldn't Connect. %s " % error_message)
 
     def add_user(self,user):
-        print "ADDING USER"
+        print("ADDING USER")
         dn = "uid="+user.name+",ou=Users,dc=chat,dc=app"
         modlist = {
             "objectClass": ["inetOrgPerson","person"],
@@ -63,41 +64,41 @@ class LdapService:
             }
         #USE "strongAuthenticationUser" objectClass for Certification, it needs a binary file,
         # addModList transforms your dictionary into a list that is conform to ldap input.
-        print "about to add user"
+        print("about to add user")
         try:
-            print "self.con :"
-            print str(self.con)
+            print("self.con :")
+            print(str(self.con))
             result = self.con.add_s(dn, ldap.modlist.addModlist(modlist))
-            print "User ADDED!"
-            print "Result : "+str(result)
+            print("User ADDED!")
+            print("Result : "+str(result))
             self.con.unbind_s()
         except ldap.LDAPError, error_message:
-            print "l error :"
-            print str(ldap.LDAPError)
-            print "Couldn't Connect. %s " % error_message
+            print("l error :")
+            print(str(ldap.LDAPError))
+            print("Couldn't Connect. %s " % error_message)
 
     def delete_user(self,uid):
         ########## deleting (a user) #################################################
-        print "Deleting user "+uid
+        print("Deleting user "+uid)
         dn = "uid="+uid+",ou=Users,dc=chat,dc=app"
         self.con.delete_s(dn)
 
     def search_user(self,uid):
-        print "!!!!!!!!!Gonna Search for user"
+        print("!!!!!!!!!Gonna Search for user")
         ldap_base = "ou=Users,dc=chat,dc=app"
         query = "(uid="+uid+")"
-        print "query :"
-        print str(query)
+        print("query :")
+        print(str(query))
         try:
-            print " gonna actually search"
+            print(" gonna actually search")
             result = self.con.search_s(ldap_base, ldap.SCOPE_SUBTREE, query)
-            print "done l9it resultat"
-            print str(result)
-            print "gonna start unbinding"
+            print("done l9it resultat")
+            print(str(result))
+            print("gonna start unbinding")
             self.con.unbind_s()
-            print "Connection closed!"
+            print("Connection closed!")
             if result==[]:
-                print "User not found"
+                print("User not found")
                 return None
             else:
                 uid = result[0][1]['uid']
@@ -107,11 +108,11 @@ class LdapService:
                 card_number = result[0][1]['description']
                 email = result[0][1]['mail']
                 user = User(uid, name, lastname, email, password, card_number, "")
-                print "FOUND USER !"
+                print("FOUND USER !")
                 return user
         except ldap.LDAPError, error_message:
-            print "l error :"
-            print str(ldap.LDAPError)
-            print "Couldn't Connect. %s " % error_message
+            print("l error :")
+            print(str(ldap.LDAPError))
+            print("Couldn't Connect. %s " % error_message)
 
 

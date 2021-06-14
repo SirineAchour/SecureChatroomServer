@@ -21,8 +21,8 @@ from ldapservice import LdapService
 from user import User
 
 def sigint_handler(signum, frame):
-    print "\033[91m"+"\nServer shutdown !!"+"\033[0m"
-    print "\n\n"
+    print("\033[91m"+"\nServer shutdown !!"+"\033[0m")
+    print("\n\n")
     sys.exit()  
 
 signal.signal(signal.SIGINT, sigint_handler)
@@ -69,21 +69,21 @@ def gen_certificate(ind) :
     builder = builder.not_valid_after(datetime.datetime(2023, 8, 2))
     builder = builder.serial_number(utils.int_from_bytes(os.urandom(20), "big") >> 1)
     builder = builder.public_key(csr_public_key)
-    print "extensions"
+    print("extensions")
     for ext in csr.extensions :
         builder = builder.add_extension(ext.value , ext.critical)
-    print "signing the cert"
+    print("signing the cert")
     certificate = builder.sign(
         private_key=ca_key, algorithm=hashes.SHA256(),
         backend=default_backend()
     )
 
-    print "writing the cert"
+    print("writing the cert")
     certificatepem = "certificate" + str(ind) + ".pem"
     with open(certificatepem, "wb") as f:
         f.write(certificate.public_bytes(serialization.Encoding.PEM))
-    print str(certificatepem)
-    print "ALMOST DONE WIT CERT GEN"
+    print(str(certificatepem))
+    print("ALMOST DONE WIT CERT GEN")
     return certificate.public_bytes(serialization.Encoding.PEM),csr_public_key,ca_key
 
 class myclient:
@@ -94,21 +94,21 @@ class myclient:
         self.crt = crt
 
 def send_file(sock , file) :
-    print "gonna send file"
+    print("gonna send file")
     f = open(file, 'rb') 
-    print "opened file successfully"
+    print("opened file successfully")
     l = f.read(8192)
-    print "read file contents :"
-    print str(l)
+    print("read file contents :")
+    print(str(l))
 
-    print "sock ?"
-    print sock
+    print("sock ?")
+    print(sock)
     sock.sendall(l)
-    print "done sending all "
+    print("done sending all ")
     f.close()
-    print "closed file"
+    print("closed file")
     sock.recv(1)
-    print "done sending file"
+    print("done sending file")
 
 def send_msg(sock,msg) : 
     data = str(msg)
@@ -116,9 +116,9 @@ def send_msg(sock,msg) :
     sock.recv(1)
 
 def recv_msg( sock) : 
-    print "server waiting for msg"
+    print("server waiting for msg")
     data = sock.recv(8192)
-    print str(data)
+    print(str(data))
     sock.sendall('1')
     return str(data)
 
@@ -154,32 +154,32 @@ def decrypt (public_key,msg):
 def register_client(data,_id,sock) :
 
     write_file(sock,data,'clientcsr' + str(_id) + '.pem')
-    print "done writing file"
+    print("done writing file")
     certificate,public_key,ca_key = gen_certificate(_id)
-    print "done generating certif"
+    print("done generating certif")
 
     send_file(sock,"certificate" + str(_id) + ".pem")
-    print "done sending certif"
+    print("done sending certif")
     send_file(sock,"cert.pem")
-    print "done sending cert.pem"
+    print("done sending cert.pem")
     login = recv_msg(sock)
     password = recv_msg(sock)
     email = recv_msg(sock)
     carte = recv_msg(sock)
     #here
-    print "about to load ldap service"
+    print("about to load ldap service")
     ldapServ=LdapService()
-    print "got ldap service"
-    print str(ldapServ)
+    print("got ldap service")
+    print(str(ldapServ))
     user=User(login,login,login,email,password,carte,certificate)
-    print "loaded user object"
-    print "adding user"
+    print("loaded user object")
+    print("adding user")
     ldapServ.add_user(user)
-    print "done user added"
+    print("done user added")
     client_pk[login] = public_key
-    print "set publilc key "
+    print("set publilc key ")
     newclient = myclient(_id,login,public_key,certificate)
-    print "!!!!!!!!!!!!!!created new client"
+    print("!!!!!!!!!!!!!!created new client")
     clients.append(newclient)
     send_msg(sock,'YES')
     return login,password
@@ -196,8 +196,8 @@ def auth_client(sock,_id) :
     login = recv_msg(sock)
     password = recv_msg(sock)
     ldapServ = LdapService()
-    print "login :"
-    print str(login)
+    print("login :")
+    print(str(login))
     user=ldapServ.search_user(login)
 
 
@@ -232,51 +232,51 @@ def chat_server():
 
     SOCKET_LIST.append(server_socket)
 
-    print "neuron server started on port " + str(PORT)
+    print("neuron server started on port " + str(PORT))
 
     while 1:
         ready_to_read,ready_to_write,in_error = select.select(SOCKET_LIST,[],[],0)
 
         for sock in ready_to_read:
-            print "in for loop"
+            print("in for loop")
             if sock == server_socket:
                 sockfd, addr = server_socket.accept()
                 SOCKET_LIST.append(sockfd)
                 send_msg(sockfd,ind)
                 ind = str(int(ind) + 1 )
-                print "user (%s, %s) connected" % addr
+                print("user (%s, %s) connected" % addr)
 
             else:
-                print "in else"
+                print("in else")
                 try:
-                    print "gonna try to receive msg"
+                    print("gonna try to receive msg")
                     data = recv_msg(sock)
-                    print "got message containing data"
-                    print "data :"
-                    print str(data)
+                    print("got message containing data")
+                    print("data :")
+                    print(str(data))
                     if data:
                         _id = data [:3]
                         if data[3:6] == 'csr' :
-                            print "in new client"
+                            print("in new client")
                             reglogin,regpassword = register_client(data[6:],_id,sock)
-                            print "done with new client"
+                            print("done with new client")
 
                         elif data[3:6] == 'aut' :
-                            print "about to log an old client" 
+                            print("about to log an old client" )
                             login,password = auth_client(sock,_id)
-                            print login + " + " +password
-                            print "done with login"
+                            print(login + " + " +password)
+                            print("done with login")
                         elif data[3:6] == 'msg' : 
-                            print "gonna wait for msg"
+                            print("gonna wait for msg")
                             reciever = recv_msg(sock)
-                            print "gonna transmit msg"
+                            print("gonna transmit msg")
                             transmit_msg(_id,reciever,sock)
-                            print "done transmitting l msg"
+                            print("done transmitting l msg")
                         
 
 
                         elif VIEW == '1':
-                          print clients[int(_id)] + ' : ' + data 
+                          print(clients[int(_id)] + ' : ' + data )
                     else:
 
                         if sock in SOCKET_LIST:
@@ -302,12 +302,12 @@ def broadcast (server_socket, sock, message):
                 if socket in SOCKET_LIST:
                     SOCKET_LIST.remove(socket)
 os.system("clear")
-print """
+print("""
     *********************************
      CHAT ROOM SERVER STARTING .....               
         *********************************
 """
-
+)
 
 if __name__ == "__main__":
 
