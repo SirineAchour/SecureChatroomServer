@@ -103,7 +103,7 @@ def send_file(sock , file) :
 
     print("sock ?")
     print(sock)
-    sock.sendall(l)
+    sock.sendall(l.encode('utf-8'))
     print("done sending all ")
     f.close()
     print("closed file")
@@ -125,8 +125,8 @@ def recv_msg(sock) :
     print("sock remote @ : "+str(sock.getpeername()))
     print("sock name : "+str(sock.getsockname()))
     print("sock tyoe : "+str(sock.type))
-    sock.sendall('1')
-    print("sending 1 to all")
+    sock.sendall('1'.encode('utf-8'))
+    print("sent 1 to all")
     return data.decode("utf-8")
 
 def write_file(sock,data,file) :
@@ -299,7 +299,7 @@ def broadcast (server_socket, sock, message):
 
         if socket != server_socket and socket != sock :
             try :
-                socket.sendall(message)
+                socket.sendall(message.encode('utf-8'))
             except :
 
                 socket.close()
