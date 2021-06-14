@@ -196,9 +196,10 @@ def register_client(data,_id,sock) :
     send_msg(sock,'YES')
     return login,password
 
-def send_all_users():
+def send_all_users(sock):
     ldapServ = LdapService()
     ldapServ.list_users()
+    send_msg(sock,'/done/')
 
 def send_available_clients(sock,_id):
     print("gonna send available clients")
