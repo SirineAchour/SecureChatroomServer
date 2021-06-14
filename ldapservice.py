@@ -27,78 +27,9 @@ class LdapService:
             print(str(os.getenv('OPENLDAP_ROOT_PASSWORD')))
             self.con.simple_bind_s("cn=Manager,dc=chat,dc=app", os.getenv('OPENLDAP_ROOT_PASSWORD'))
             print("LDAP Server Listening....")
-
-            #print("gonna get ous :")
-            #self.get_child_ou_dns();
-            # if not LdapService.created_group:
-            #     print("gonna start creating group")
-            #     # fs_dn = 'cn=Manager,dc=chat,dc=app'
-            #     # groupname = 'Users'
-
-            #     # attr = {}
-            #     # attr['objectClass'] = ['top','organizationalunit']
-            #     # #attr['groupType'] = '-2147483646'
-            #     # attr['ou'] = groupname
-            #     # #attr['name'] = groupname
-            #     # #attr['sAMAccountName'] = groupname
-
-            #     # ldif = ldap.modlist.addModlist(attr)
-            #     # print("fott l ldif")
-            #     # LdapService.created_group = True
-            #     # print("set created_group to true")
-            #     # self.con.add_s(fs_dn,ldif)
-                
-                
-            #     # fs_dn = 'dc=chat,dc=app'
-            #     # groupname = 'Users'
-            #     # attr = {}
-            #     # attr['objectClass'] = ['group','top']
-            #     # attr['groupType'] = '-2147483646'
-            #     # attr['cn'] = groupname
-            #     # attr['name'] = groupname
-            #     # attr['sAMAccountName'] = groupname
-
-            #     # ldif = ldap.modlist.addModlist(attr)
-            #     # print(self.con.add_s(fs_dn,ldif))
-
-            #     try:
-            #         bind_dn="cn=Manager,dc=chat,dc=app"
-            #         password =os.getenv('OPENLDAP_ROOT_PASSWORD')
-            #         #l =ldap.LDAPWrapper(bind_dn,password)
-            #         dnToAddTo ="dc=chat,dc=app"
-            #         modlist =[]
-            #         modlist.append(('dn','ou=Users,dc=chat,dc=app'))
-            #         modlist.append(('objectclass',['top','organizationalunit']))
-            #         modlist.append(('ou','Users'))
-            #         self.con.add_s(dnToAddTo, modlist)
-            #         self.con.close()
-            #     except ldap.LDAPError as e:
-            #         print(e)
-            #     print("added group all good")
-            print("not gonna create group bc cv")
         except ldap.LDAPError:
             print("l error :")
             print(str(ldap.LDAPError))
-
-    def get_child_ou_dns(self):
-        try:
-            dn = "cn=Manager,dc=chat,dc=app"
-            attrs = ['memberuid']
-            base = "cn=Manager,dc=chat,dc=app"
-            pw = str(os.getenv('OPENLDAP_ROOT_PASSWORD'))
-            self.con.start_tls_s()
-            self.con.simple_bind_s(dn,pw)
-            groups = self.con.search_s(base, ldap.SCOPE_SUBTREE, filter, attrs)
-            for a in groups:
-                print( 'Group: '+ str(a[0]))
-        except ldap.INVALID_CREDENTIALS:
-            print( "Your username or password is incorrect.")
-        except ldap.LDAPError as e:
-            print("l error :")
-            print(str(e))
-        finally:
-            print( "Doing unbind.")
-            self.con.unbind()
 
     def add_user(self,user):
         print("ADDING USER")
@@ -162,5 +93,10 @@ class LdapService:
             print("l error :")
             print(str(ldap.LDAPError))
             #print("Couldn't Connect. " + str(error_message))
-
-
+    
+    def list_users(self):
+        ldap_base = "ou=Users,dc=chat,dc=app"
+        res =self.con.search_s(ldap_base, ldap.SCOPE_SUBTREE,'(objectClass=person)')
+        for dn, entry in res:
+            print(dn)
+        return res

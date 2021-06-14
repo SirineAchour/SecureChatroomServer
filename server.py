@@ -196,6 +196,10 @@ def register_client(data,_id,sock) :
     send_msg(sock,'YES')
     return login,password
 
+def send_all_users():
+    ldapServ = LdapService()
+    ldapServ.list_users()
+
 def send_available_clients(sock,_id):
     print("gonna send available clients")
     for client in clients :
@@ -287,6 +291,16 @@ def chat_server():
                         print("gonna wait for msg")
                         reciever = recv_msg(sock)
                         print("gonna transmit msg")
+                        transmit_msg(_id,reciever,sock)
+                        print("done transmitting l msg")
+                    elif data[3:6] == 'cus' : 
+                        print("gonna send connected users ")
+                        send_available_clients(sock, _id)
+                        print("done sending connected users")
+                    elif data[3:6] == 'dus' : 
+                        print("gonna send all users")
+                        send_all_users(sock)
+                        print("done sending all users")
                         transmit_msg(_id,reciever,sock)
                         print("done transmitting l msg")
                     elif data[3:6] == 'srh' : 
