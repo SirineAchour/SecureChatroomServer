@@ -1,4 +1,3 @@
-from client.client import logout
 import configparser
 import base64
 import sys, socket, select
