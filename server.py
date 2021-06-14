@@ -211,9 +211,10 @@ def auth_client(sock,_id) :
     print("login :")
     print(str(login))
     user=ldapServ.search_user(login)
-
-
-
+    print("user.uid[0] :")
+    print(str(user.uid[0]))
+    print("user.password[0]:")
+    print(str(user.password[0]))
     if login == user.uid[0] and password == user.password[0]  : 
 
         client_sockets[login] = sock
