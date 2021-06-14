@@ -124,9 +124,9 @@ class LdapService:
             print("User ADDED!")
             print("Result : "+str(result))
             self.con.unbind_s()
-        except ldap.LDAPError:
+        except ldap.LDAPError as e:
             print("l error :")
-            print(str(ldap.LDAPError))
+            print(str(e))
 
     def delete_user(self,uid):
         ########## deleting (a user) #################################################
