@@ -260,40 +260,35 @@ def chat_server():
                 print("user"+ str(addr)+"connected")
             else:
                 print("in else")
-                try:
-                    print("gonna try to receive msg")
-                    data = recv_msg(sock)
-                    print("got message containing data")
-                    print("data :")
-                    print(str(data))
-                    if data:
-                        _id = data [:3]
-                        if data[3:6] == 'csr' :
-                            print("in new client")
-                            reglogin,regpassword = register_client(data[6:],_id,sock)
-                            print("done with new client")
-                        elif data[3:6] == 'aut' :
-                            print("about to log an old client" )
-                            login,password = auth_client(sock,_id)
-                            print(login + " + " +password)
-                            print("done with login")
-                        elif data[3:6] == 'msg' : 
-                            print("gonna wait for msg")
-                            reciever = recv_msg(sock)
-                            print("gonna transmit msg")
-                            transmit_msg(_id,reciever,sock)
-                            print("done transmitting l msg")
-                        elif VIEW == '1':
-                            print("in last elif")
-                            print(clients[int(_id)] + ' : ' + data )
-                    else:
-                        print("in big else gonna remove sock")
-                        if sock in SOCKET_LIST:
-                            SOCKET_LIST.remove(sock)
-                except:
-                    print("something went wrong bye")
-                    #continue
-                    sys.exit()
+                print("gonna try to receive msg")
+                data = recv_msg(sock)
+                print("got message containing data")
+                print("data :")
+                print(str(data))
+                if data:
+                    _id = data [:3]
+                    if data[3:6] == 'csr' :
+                        print("in new client")
+                        reglogin,regpassword = register_client(data[6:],_id,sock)
+                        print("done with new client")
+                    elif data[3:6] == 'aut' :
+                        print("about to log an old client" )
+                        login,password = auth_client(sock,_id)
+                        print(login + " + " +password)
+                        print("done with login")
+                    elif data[3:6] == 'msg' : 
+                        print("gonna wait for msg")
+                        reciever = recv_msg(sock)
+                        print("gonna transmit msg")
+                        transmit_msg(_id,reciever,sock)
+                        print("done transmitting l msg")
+                    elif VIEW == '1':
+                        print("in last elif")
+                        print(clients[int(_id)] + ' : ' + data )
+                else:
+                    print("in big else gonna remove sock")
+                    if sock in SOCKET_LIST:
+                        SOCKET_LIST.remove(sock)
 
     server_socket.close()
 
