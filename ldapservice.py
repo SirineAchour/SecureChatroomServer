@@ -2,6 +2,8 @@ import ldap
 import ldap.modlist
 from user import User
 import os
+#remove this later on
+from ldap3 import Server, Connection, SUBTREE, LEVEL
 
 class LdapService:
     con=None
@@ -26,6 +28,10 @@ class LdapService:
             self.con.simple_bind_s("cn=Manager,dc=chat,dc=app", os.getenv('OPENLDAP_ROOT_PASSWORD'))
             print("LDAP Server Listening....")
 
+            print("gonna get ous 1 :")
+            print(self.get_child_ou_dns("cn=Manager,dc=chat,dc=app", self.con))
+            print("gonna get ous 2 :")
+            print(self.get_child_ou_dns("dc=chat,dc=app", self.con))
             if not LdapService.created_group:
                 print("gonna start creating group")
                 fs_dn = 'cn=Manager,dc=chat,dc=app'
@@ -48,6 +54,22 @@ class LdapService:
         except ldap.LDAPError:
             print("l error :")
             print(str(ldap.LDAPError))
+
+    def get_child_ou_dns(dn, connection):
+        results = list()
+        elements = connection.extend.standard.paged_search(
+            search_base=dn,
+            search_filter='(objectCategory=organizationalUnit)',
+            search_scope=LEVEL,
+            paged_size=100)
+        for element in elements:
+            if 'dn' in element:
+                if element['dn'] != dn:
+                    if 'dn' in element:
+                        results.append(element['dn'])
+                        print("!!!!!!!!element :")
+                        print(element)
+        return(results)
 
     def add_user(self,user):
         print("ADDING USER")
