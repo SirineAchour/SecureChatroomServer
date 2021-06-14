@@ -267,7 +267,6 @@ def chat_server():
                             print("in new client")
                             reglogin,regpassword = register_client(data[6:],_id,sock)
                             print("done with new client")
-
                         elif data[3:6] == 'aut' :
                             print("about to log an old client" )
                             login,password = auth_client(sock,_id)
@@ -279,12 +278,11 @@ def chat_server():
                             print("gonna transmit msg")
                             transmit_msg(_id,reciever,sock)
                             print("done transmitting l msg")
-                        
-
-
                         elif VIEW == '1':
-                          print(clients[int(_id)] + ' : ' + data )
+                            print("in last elif")
+                            print(clients[int(_id)] + ' : ' + data )
                     else:
+                        print("in big else gonna remove sock")
                         if sock in SOCKET_LIST:
                             SOCKET_LIST.remove(sock)
                 except:
