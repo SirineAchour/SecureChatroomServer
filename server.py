@@ -133,6 +133,9 @@ def write_file(sock,data,file) :
     filename=str(file)
     print("data :")
     print(data)
+    data = data.encode('utf-8')
+    print("new data :")
+    print(data)
     with open(filename,'wb') as f : 
         f.write(data)
     print("done writing to file")
