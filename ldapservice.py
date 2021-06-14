@@ -47,17 +47,33 @@ class LdapService:
                 # LdapService.created_group = True
                 # print("set created_group to true")
                 # self.con.add_s(fs_dn,ldif)
-                fs_dn = 'dc=chat,dc=app'
-                groupname = 'Users'
-                attr = {}
-                attr['objectClass'] = ['group','top']
-                attr['groupType'] = '-2147483646'
-                attr['cn'] = groupname
-                attr['name'] = groupname
-                attr['sAMAccountName'] = groupname
+                
+                
+                # fs_dn = 'dc=chat,dc=app'
+                # groupname = 'Users'
+                # attr = {}
+                # attr['objectClass'] = ['group','top']
+                # attr['groupType'] = '-2147483646'
+                # attr['cn'] = groupname
+                # attr['name'] = groupname
+                # attr['sAMAccountName'] = groupname
 
-                ldif = ldap.modlist.addModlist(attr)
-                print(self.con.add_s(fs_dn,ldif))
+                # ldif = ldap.modlist.addModlist(attr)
+                # print(self.con.add_s(fs_dn,ldif))
+
+                try:
+                    bind_dn="cn=Manager,dc=chat,dc=app"
+                    password =os.getenv('OPENLDAP_ROOT_PASSWORD')
+                    #l =ldap.LDAPWrapper(bind_dn,password)
+                    dnToAddTo ="dc=chat,dc=app"
+                    modlist =[]
+                    modlist.append(('dn','ou=Users,dc=chat,dc=app'))
+                    modlist.append(('objectclass',['top','organizationalunit']))
+                    modlist.append(('ou','Users'))
+                    self.con.add_s(dnToAddTo, modlist)
+                    self.con.close()
+                except ldap.LDAPError as e:
+                    print(e)
                 print("added group all good")
             print("not gonna create group bc cv")
         except ldap.LDAPError:
