@@ -115,11 +115,14 @@ def send_msg(sock,msg) :
     sock.sendall(data)
     sock.recv(1)
 
-def recv_msg( sock) : 
+def recv_msg(sock) : 
     print("server waiting for msg")
+    print("sock = "+str(sock))
     data = sock.recv(8192)
-    print(str(data))
+    print("got it : "+str(data))
+    print(data.decode("utf-8"))
     sock.sendall('1')
+    print("sending 1 to all")
     return data.decode("utf-8")
 
 def write_file(sock,data,file) :
