@@ -112,7 +112,7 @@ def send_file(sock , file) :
 
 def send_msg(sock,msg) : 
     data = str(msg)
-    sock.sendall(data)
+    sock.sendall(msg)
     sock.recv(1)
 
 def recv_msg( sock) : 
@@ -310,6 +310,5 @@ print("""
 )
 
 if __name__ == "__main__":
-
     sys.exit(chat_server())
 
