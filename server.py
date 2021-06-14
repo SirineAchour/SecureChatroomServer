@@ -210,7 +210,7 @@ def send_available_clients(sock,_id):
         if client.ind == _id :
             continue
         send_msg(sock,client.login)
-    send_msg(sock,'abc')
+    send_msg(sock,'/done/')
 
 def auth_client(sock,_id) : 
     login = recv_msg(sock)
@@ -229,8 +229,8 @@ def auth_client(sock,_id) :
         print("saved client socket")
         send_msg(sock,'done')
         print("sent done")
-        send_available_clients(sock,_id)
-        print("done sending available clients")
+        #send_available_clients(sock,_id)
+        #print("done sending available clients")
         return login,password
     else :
         send_msg(sock,'credentials non existent')
