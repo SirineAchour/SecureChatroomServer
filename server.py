@@ -111,8 +111,8 @@ def send_file(sock , file) :
     print("done sending file")
 
 def send_msg(sock,msg) : 
-    data = str(msg)
-    sock.sendall(msg)
+    data = msg.encode('utf-8')
+    sock.sendall(data)
     sock.recv(1)
 
 def recv_msg( sock) : 
