@@ -1,3 +1,4 @@
+from client.client import logout
 import configparser
 import base64
 import sys, socket, select
@@ -198,7 +199,9 @@ def register_client(data,_id,sock) :
 
 def send_all_users(sock):
     ldapServ = LdapService()
-    ldapServ.list_users()
+    users = ldapServ.list_users()
+    for user in users :
+        send_msg(sock, user)
     send_msg(sock,'/done/')
 
 def send_available_clients(sock,_id):
@@ -245,7 +248,17 @@ def transmit_msg(_id,reciever,sock) :
     msg = decrypt(ca_key,msg)
     msg = encrypt(client_pk[reciever],msg)
     send_msg(client_sockets[reciever],msg)
-  
+
+def logout_user(sock, _id):
+    for index,client in enumerate(clients) :
+        if client.ind == _id and client_sockets[client.login] == sock:
+            #remove client
+            broadcast(SOCKET_LIST.index(0),None, "\033[91m"+"\n"+client.login+" logged out\n"+"\033[0m")
+            clients.pop(index)
+            client_sockets.pop(index)
+            SOCKET_LIST.remove(sock)
+            send_msg("/done/")
+            
 def chat_server():
     LdapService.created_group = False
     ind = "100"
@@ -298,6 +311,10 @@ def chat_server():
                         print("gonna send connected users ")
                         send_available_clients(sock, _id)
                         print("done sending connected users")
+                    elif data[3:6] == 'lgo' : 
+                        print("gonna logout")
+                        logout_user(sock, _id)
+                        print("done sending connected users")
                     elif data[3:6] == 'dus' : 
                         print("gonna send all users")
                         send_all_users(sock)
@@ -331,16 +348,14 @@ def chat_server():
 
 def broadcast (server_socket, sock, message):
     for socket in SOCKET_LIST:
-
         if socket != server_socket and socket != sock :
             try :
                 socket.sendall(message.encode('utf-8'))
             except :
-
                 socket.close()
-
                 if socket in SOCKET_LIST:
                     SOCKET_LIST.remove(socket)
+
 os.system("clear")
 print("""
     *********************************
@@ -351,4 +366,3 @@ print("""
 
 if __name__ == "__main__":
     sys.exit(chat_server())
-

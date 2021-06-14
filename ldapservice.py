@@ -95,8 +95,9 @@ class LdapService:
             #print("Couldn't Connect. " + str(error_message))
     
     def list_users(self):
+        result=[]
         ldap_base = "ou=Users,dc=chat,dc=app"
         res =self.con.search_s(ldap_base, ldap.SCOPE_SUBTREE,'(objectClass=person)')
         for dn, entry in res:
-            print(dn)
-        return res
+            result.append(dn.split(',')[0].split('=')[1])
+        return result
