@@ -215,8 +215,8 @@ def auth_client(sock,_id) :
     print(str(user.uid[0]))
     print("user.password[0]:")
     print(str(user.password[0]))
-    if login == user.uid[0] and password == user.password[0]  : 
-
+    if login.encode('utf-8') == user.uid[0] and password.encode('utf-8') == user.password[0]  : 
+        print("in first if in authcl_ent")
         client_sockets[login] = sock
         send_msg(sock,'done')
         send_available_clients(sock,_id)
