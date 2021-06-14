@@ -178,14 +178,12 @@ def register_client(data,_id,sock) :
     print("done sending cert.pem")
     login = recv_msg(sock)
     password = recv_msg(sock)
-    email = recv_msg(sock)
-    carte = recv_msg(sock)
     #here
     print("about to load ldap service")
     ldapServ=LdapService()
     print("got ldap service")
     print(str(ldapServ))
-    user=User(login,login,login,email,password,carte,certificate)
+    user=User(login,login,login,password,certificate)
     print("loaded user object")
     print("adding user")
     ldapServ.add_user(user)
@@ -299,7 +297,7 @@ def chat_server():
                         user=ldapServ.search_user(username)
                         print("user :")
                         print(user)
-                        if len(user) == 0:
+                        if user == None:
                             print("username not found")
                             send_msg(sock,"0")
                         else:

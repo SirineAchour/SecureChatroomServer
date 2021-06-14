@@ -112,8 +112,6 @@ class LdapService:
             "cn": [name_surname.encode('utf-8')],
             "displayName": [name_surname.encode('utf-8')],
             "userPassword": [ user.password.encode('utf-8')],
-            "description": [user.card_number.encode('utf-8')],
-            "mail":[user.email.encode('utf-8')]
             }
         #USE "strongAuthenticationUser" objectClass for Certification, it needs a binary file,
         # addModList transforms your dictionary into a list that is conform to ldap input.
@@ -157,9 +155,7 @@ class LdapService:
                 lastname = result[0][1]['sn']
                 name = result[0][1]['givenName']
                 password = result[0][1]['userPassword']
-                card_number = result[0][1]['description']
-                email = result[0][1]['mail']
-                user = User(uid, name, lastname, email, password, card_number, "")
+                user = User(uid, name, lastname, password, "")
                 print("FOUND USER !")
                 return user
         except ldap.LDAPError:
