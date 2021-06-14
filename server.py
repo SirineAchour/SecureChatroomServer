@@ -131,6 +131,8 @@ def recv_msg(sock) :
 
 def write_file(sock,data,file) :
     filename=str(file)
+    print("data :")
+    print(data)
     with open(filename,'wb') as f : 
         f.write(data)
     print("done writing to file")
