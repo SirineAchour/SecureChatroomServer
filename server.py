@@ -103,7 +103,7 @@ def send_file(sock , file) :
 
     print("sock ?")
     print(sock)
-    sock.sendall(l.encode('utf-8'))
+    sock.sendall(l)
     print("done sending all ")
     f.close()
     print("closed file")
