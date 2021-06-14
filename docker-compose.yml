@@ -15,8 +15,8 @@ services:
       OPENLDAP_ROOT_DN_SUFFIX: "dc=chat,dc=app"
       OPENLDAP_ROOT_DN_PREFIX: "cn=Manager"
     volumes:
-      - ou.ldif:/etc/ou.ldif
-    command: "ldapadd -x -D cn=Manager,dc=chat,dc=app -wPassword1 -f /etc/ou.ldif;"
+      - ./data:/etc/data
+#    command: "ldapadd -x -D cn=Manager,dc=chat,dc=app -wPassword1 -f /etc/ou.ldif;"
 
   chat-server:
     container_name: chat-server
@@ -30,5 +30,3 @@ services:
 networks:
   mynet:
     driver: bridge
-volumes:
-  ou.ldif:
