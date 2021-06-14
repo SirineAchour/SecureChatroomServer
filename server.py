@@ -239,7 +239,6 @@ def transmit_msg(_id,reciever,sock) :
     pem_ca_key = open('key.pem' , 'rb').read()
     ca_key = serialization.load_pem_private_key(pem_ca_key, password = None,backend = default_backend())
     msg= recv_msg(sock)
-
     msg = decrypt(ca_key,msg)
     msg = encrypt(client_pk[reciever],msg)
     send_msg(client_sockets[reciever],msg)
@@ -292,6 +291,21 @@ def chat_server():
                         print("gonna transmit msg")
                         transmit_msg(_id,reciever,sock)
                         print("done transmitting l msg")
+                    elif data[3:6] == 'srh' : 
+                        print("gonna search for user")
+                        username = recv_msg(sock)
+                        print("gonna search")
+                        ldapServ = LdapService()
+                        user=ldapServ.search_user(username)
+                        print("user :")
+                        print(user)
+                        if len(user) == 0:
+                            print("username not found")
+                            send_msg(sock,"0")
+                        else:
+                            print("username found")
+                            send_msg(sock,"1")
+                        print("done searching l msg")
                     elif VIEW == '1':
                         print("in last elif")
                         print(clients[int(_id)] + ' : ' + data )
