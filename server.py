@@ -111,9 +111,11 @@ def send_file(sock , file) :
     print("done sending file")
 
 def send_msg(sock,msg) : 
+    print("gonna send : "+str(msg))
     data = msg.encode('utf-8')
     sock.sendall(data)
     sock.recv(1)
+    print("done sending")
 
 def recv_msg(sock) : 
     print("server waiting for msg")
@@ -197,6 +199,7 @@ def register_client(data,_id,sock) :
     return login,password
 
 def send_available_clients(sock,_id):
+    print("gonna send available clients")
     for client in clients :
         if client.ind == _id :
             continue
@@ -204,7 +207,6 @@ def send_available_clients(sock,_id):
     send_msg(sock,'abc')
 
 def auth_client(sock,_id) : 
-
     login = recv_msg(sock)
     password = recv_msg(sock)
     ldapServ = LdapService()
@@ -218,9 +220,11 @@ def auth_client(sock,_id) :
     if login.encode('utf-8') == user.uid[0] and password.encode('utf-8') == user.password[0]  : 
         print("in first if in authcl_ent")
         client_sockets[login] = sock
+        print("saved client socket")
         send_msg(sock,'done')
+        print("sent done")
         send_available_clients(sock,_id)
-
+        print("done sending available clients")
     else :
         send_msg(sock,'credentials non existent')
         recv_msg(sock)
