@@ -225,6 +225,7 @@ def auth_client(sock,_id) :
         print("sent done")
         send_available_clients(sock,_id)
         print("done sending available clients")
+        return login,password
     else :
         send_msg(sock,'credentials non existent')
         recv_msg(sock)
