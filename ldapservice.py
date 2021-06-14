@@ -27,7 +27,7 @@ class LdapService:
 
             if not LdapService.created_group:
                 print "gonna start creating group"
-                fs_dn = 'dc=chat,dc=app'
+                fs_dn = 'cn=Manager,dc=chat,dc=app'
                 groupname = 'Users'
 
                 attr = {}
