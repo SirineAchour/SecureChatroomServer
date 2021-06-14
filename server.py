@@ -121,6 +121,7 @@ def recv_msg(sock) :
     data = sock.recv(8192)
     print("got it : "+str(data))
     print(data.decode("utf-8"))
+    print(len(data.decode("utf-8")))
     sock.sendall('1')
     print("sending 1 to all")
     return data.decode("utf-8")
@@ -285,7 +286,8 @@ def chat_server():
                             SOCKET_LIST.remove(sock)
                 except:
                     print("something went wrong bye")
-                    continue
+                    #continue
+                    sys.exit()
 
     server_socket.close()
 
