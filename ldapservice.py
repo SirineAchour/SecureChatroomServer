@@ -66,9 +66,9 @@ class LdapService:
                 print( 'Group: '+ str(a[0]))
         except ldap.INVALID_CREDENTIALS:
             print( "Your username or password is incorrect.")
-        except ldap.LDAPError:
+        except ldap.LDAPError as e:
             print("l error :")
-            print(str(ldap.LDAPError))
+            print(str(e))
         finally:
             print( "Doing unbind.")
             self.con.unbind()
