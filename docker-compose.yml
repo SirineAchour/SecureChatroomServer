@@ -15,7 +15,11 @@ services:
       OPENLDAP_ROOT_DN_SUFFIX: "dc=chat,dc=app"
       OPENLDAP_ROOT_DN_PREFIX: "cn=Manager"
     command:
-      /bin/sh -c "echo -e \"dn: ou=Users,dc=chat,dc=app\nobjectClass: organizationalUnit\nou: Users\" > /etc/ou.ldif;ldapadd -x -D cn=Manager,dc=chat,dc=app -wPassword1 -f /etc/ou.ldif;"
+      /bin/sh -c "
+      echo -e 'dn: ou=Users,dc=chat,dc=app' > /etc/ou.ldif
+      && echo 'objectClass: organizationalUnit' >> /etc/ou.ldif
+      && echo 'ou: Users' >> /etc/ou.ldif
+      && ldapadd -x -D cn=Manager,dc=chat,dc=app -wPassword1 -f /etc/ou.ldif;"
 
   chat-server:
     container_name: chat-server
