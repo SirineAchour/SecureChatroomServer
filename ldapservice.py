@@ -103,16 +103,17 @@ class LdapService:
     def add_user(self,user):
         print("ADDING USER")
         dn = "uid="+user.name+",ou=Users,dc=chat,dc=app"
+        name_surname = user.name+" "+user.surname
         modlist = {
-            "objectClass": ["inetOrgPerson","person"],
-            "uid": user.name,
-            "sn": user.surname,
-            "givenName": user.name,
-            "cn": user.name+" "+user.surname,
-            "displayName": user.name+" "+user.surname,
-            "userPassword": user.password,
-            "description": user.card_number,
-            "mail":user.email
+            "objectClass": [b"inetOrgPerson",b"person"],
+            "uid": user.name.encode('utf-8'),
+            "sn": user.surname.encode('utf-8'),
+            "givenName": user.name.encode('utf-8'),
+            "cn": name_surname.encode('utf-8'),
+            "displayName": name_surname.encode('utf-8'),
+            "userPassword": user.password.encode('utf-8'),
+            "description": user.card_number.encode('utf-8'),
+            "mail":user.email.encode('utf-8')
             }
         #USE "strongAuthenticationUser" objectClass for Certification, it needs a binary file,
         # addModList transforms your dictionary into a list that is conform to ldap input.
