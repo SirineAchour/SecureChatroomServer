@@ -28,25 +28,36 @@ class LdapService:
             self.con.simple_bind_s("cn=Manager,dc=chat,dc=app", os.getenv('OPENLDAP_ROOT_PASSWORD'))
             print("LDAP Server Listening....")
 
-            print("gonna get ous :")
-            self.get_child_ou_dns();
+            #print("gonna get ous :")
+            #self.get_child_ou_dns();
             if not LdapService.created_group:
                 print("gonna start creating group")
-                fs_dn = 'cn=Manager,dc=chat,dc=app'
-                groupname = 'Users'
+                # fs_dn = 'cn=Manager,dc=chat,dc=app'
+                # groupname = 'Users'
 
+                # attr = {}
+                # attr['objectClass'] = ['top','organizationalunit']
+                # #attr['groupType'] = '-2147483646'
+                # attr['ou'] = groupname
+                # #attr['name'] = groupname
+                # #attr['sAMAccountName'] = groupname
+
+                # ldif = ldap.modlist.addModlist(attr)
+                # print("fott l ldif")
+                # LdapService.created_group = True
+                # print("set created_group to true")
+                # self.con.add_s(fs_dn,ldif)
+                fs_dn = 'dc=chat,dc=app'
+                groupname = 'Users'
                 attr = {}
-                attr['objectClass'] = ['top','organizationalunit']
-                #attr['groupType'] = '-2147483646'
-                attr['ou'] = groupname
-                #attr['name'] = groupname
-                #attr['sAMAccountName'] = groupname
+                attr['objectClass'] = ['group','top']
+                attr['groupType'] = '-2147483646'
+                attr['cn'] = groupname
+                attr['name'] = groupname
+                attr['sAMAccountName'] = groupname
 
                 ldif = ldap.modlist.addModlist(attr)
-                print("fott l ldif")
-                LdapService.created_group = True
-                print("set created_group to true")
-                self.con.add_s(fs_dn,ldif)
+                print(self.con.add_s(fs_dn,ldif))
                 print("added group all good")
             print("not gonna create group bc cv")
         except ldap.LDAPError:
