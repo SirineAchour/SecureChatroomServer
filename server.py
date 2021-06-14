@@ -122,6 +122,9 @@ def recv_msg(sock) :
     print("got it : "+str(data))
     print(data.decode("utf-8"))
     print(len(data.decode("utf-8")))
+    print("sock remote @ : "+str(sock.getpeername()))
+    print("sock name : "+str(sock.getsockname()))
+    print("sock tyoe : "+str(sock.type))
     sock.sendall('1')
     print("sending 1 to all")
     return data.decode("utf-8")
@@ -244,12 +247,12 @@ def chat_server():
         for sock in ready_to_read:
             print("in for loop")
             if sock == server_socket:
+                print("server socket")
                 sockfd, addr = server_socket.accept()
                 SOCKET_LIST.append(sockfd)
                 send_msg(sockfd,ind)
                 ind = str(int(ind) + 1 )
                 print("user"+ str(addr)+"connected")
-
             else:
                 print("in else")
                 try:
