@@ -204,7 +204,7 @@ def send_available_clients(sock,_id):
         print("client : ")
         print(client)
         print(client.ind)
-        print(client._id)
+        print(_id)
         if client.ind == _id :
             continue
         send_msg(sock,client.login)
