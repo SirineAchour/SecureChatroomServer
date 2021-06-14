@@ -120,7 +120,7 @@ def recv_msg( sock) :
     data = sock.recv(8192)
     print(str(data))
     sock.sendall('1')
-    return str(data)
+    return data.decode("utf-8")
 
 def write_file(sock,data,file) :
     filename=str(file)
@@ -278,13 +278,10 @@ def chat_server():
                         elif VIEW == '1':
                           print(clients[int(_id)] + ' : ' + data )
                     else:
-
                         if sock in SOCKET_LIST:
                             SOCKET_LIST.remove(sock)
-
-
                 except:
-
+                    print("something went wrong bye")
                     continue
 
     server_socket.close()
