@@ -28,7 +28,7 @@ def sigint_handler(signum, frame):
 signal.signal(signal.SIGINT, sigint_handler)
 
 
-config = configparser.Rawconfigparser()
+config = configparser.RawConfigParser()
 config.read(r'chat.conf')
 
 HOST = config.get('config', 'HOST')
