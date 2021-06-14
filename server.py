@@ -1,4 +1,4 @@
-import ConfigParser
+import configparser
 import base64
 import sys, socket, select
 from Crypto.Cipher import AES
@@ -28,7 +28,7 @@ def sigint_handler(signum, frame):
 signal.signal(signal.SIGINT, sigint_handler)
 
 
-config = ConfigParser.RawConfigParser()
+config = configparser.Rawconfigparser()
 config.read(r'chat.conf')
 
 HOST = config.get('config', 'HOST')
