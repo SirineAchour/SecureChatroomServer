@@ -245,13 +245,21 @@ def auth_client(sock,_id) :
         recv_msg(sock)
         #auth_client(sock,_id,_,regpassword)
 
-def transmit_msg(_id,reciever,sock) : 
+def transmit_msg(_id,receiver,sock) : 
     pem_ca_key = open('key.pem' , 'rb').read()
     ca_key = serialization.load_pem_private_key(pem_ca_key, password = None,backend = default_backend())
     msg= recv_msg(sock)
     msg = decrypt(ca_key,msg)
-    msg = encrypt(client_pk[reciever],msg)
-    send_msg(client_sockets[reciever],msg)
+    print("decrypted msg")
+    print(str(msg))
+    msg = encrypt(client_pk[receiver],msg)
+    print("encrypted msg")
+    print(str(msg))
+    print("client cocket : ")
+    print(client_sockets[receiver])
+    if client_sockets[receiver]:
+        print(client_sockets[receiver].)
+    send_msg(client_sockets[receiver],msg)
 
 def logout_user(sock, _id):
     for index,client in enumerate(clients) :
@@ -310,16 +318,17 @@ def chat_server():
                         print("done with login")
                     elif data[3:6] == 'msg' : 
                         print("gonna wait for msg")
-                        reciever = recv_msg(sock)
-                        print("receiver = "+str(reciever))
-                        if len(reciever) == 0:
-                            print("gonna broadcast to all")
+                        receiver = recv_msg(sock)
+                        print("receiver = "+str(receiver))
+                        print(len(receiver))
+                        if len(receiver) == 0:
+                            print("!!!!!!!!!gonna broadcast to all")
                             msg= recv_msg(sock)
                             msg = decrypt(ca_key,msg)
                             broadcast(SERVER_SOCKET, sock,msg)
                         else:
-                            print("gonna transmit msg")
-                            transmit_msg(_id,reciever,sock)
+                            print("!!!!!!!!gonna transmit msg")
+                            transmit_msg(_id,receiver,sock)
                             print("done transmitting l msg")
                     elif data[3:6] == 'cus' : 
                         print("gonna send connected users ")
