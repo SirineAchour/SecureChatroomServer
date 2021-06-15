@@ -267,7 +267,7 @@ def logout_user(sock, _id):
             #remove client
             broadcast(SERVER_SOCKET,None, "\033[91m"+"\n'"+client.login+"' logged out\n"+"\033[0m")
             clients.pop(index)
-            client_sockets.pop(client.login)
+            #client_sockets.pop(client.login)
             SOCKET_LIST.remove(sock)
             send_msg("/done/")
             
