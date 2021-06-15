@@ -37,6 +37,7 @@ PASSWORD = config.get('config', 'PASSWORD')
 VIEW = str(config.get('config', 'VIEW'))
 SOCKET_LIST = []
 CONNECTED_USERS=[]
+SERVER_SOCKET = None
 
 BUFFER_SIZE = 8192
 clients = []
@@ -252,7 +253,7 @@ def logout_user(sock, _id):
     for index,client in enumerate(clients) :
         if client.ind == _id and client_sockets[client.login] == sock:
             #remove client
-            broadcast(SOCKET_LIST[0],None, "\033[91m"+"\n"+client.login+" logged out\n"+"\033[0m")
+            broadcast(SERVER_SOCKET,None, "\033[91m"+"\n"+client.login+" logged out\n"+"\033[0m")
             clients.pop(index)
             client_sockets.pop(index)
             SOCKET_LIST.remove(sock)
@@ -265,7 +266,7 @@ def chat_server():
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server_socket.bind((HOST, PORT))
     server_socket.listen(10)
-
+    SERVER_SOCKET = server_socket
     SOCKET_LIST.append(server_socket)
 
     print("neuron server started on port " + str(PORT))
