@@ -184,7 +184,7 @@ def register_client(data,_id,sock) :
     ldapServ=LdapService()
     print("got ldap service")
     print(str(ldapServ))
-    user=User(login,login,login,password,certificate)
+    user=User(login,login,login,password,certificate, public_key)
     print("loaded user object")
     print("adding user")
     ldapServ.add_user(user)
@@ -223,7 +223,8 @@ def auth_client(sock,_id) :
     print("login :")
     print(str(login))
     user=ldapServ.search_user(login)
-    print("user.uid[0] :")
+    print("UUSER:")
+    print(user)
     print(str(user.uid[0]))
     print("user.password[0]:")
     print(str(user.password[0]))
@@ -233,13 +234,16 @@ def auth_client(sock,_id) :
         print("saved client socket")
         send_msg(sock,'done')
         print("sent done")
+        newclient = myclient(_id,login, client_pk[login],"")
+        print("!!!!!!!!!!!!!!created new client")
+        clients.append(newclient)
         #send_available_clients(sock,_id)
         #print("done sending available clients")
         return login,password
     else :
         send_msg(sock,'credentials non existent')
         recv_msg(sock)
-        auth_client(sock,_id,reglogin,regpassword)
+        #auth_client(sock,_id,_,regpassword)
 
 def transmit_msg(_id,reciever,sock) : 
     pem_ca_key = open('key.pem' , 'rb').read()
@@ -326,8 +330,6 @@ def chat_server():
                         print("gonna send all users")
                         send_all_users(sock)
                         print("done sending all users")
-                        transmit_msg(_id,reciever,sock)
-                        print("done transmitting l msg")
                     elif data[3:6] == 'srh' : 
                         print("gonna search for user")
                         username = recv_msg(sock)
