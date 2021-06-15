@@ -184,7 +184,7 @@ def register_client(data,_id,sock) :
     ldapServ=LdapService()
     print("got ldap service")
     print(str(ldapServ))
-    user=User(login,login,login,password,certificate, public_key)
+    user=User(login,login,login,password,certificate)
     print("loaded user object")
     print("adding user")
     ldapServ.add_user(user)
@@ -234,9 +234,9 @@ def auth_client(sock,_id) :
         print("saved client socket")
         send_msg(sock,'done')
         print("sent done")
-        newclient = myclient(_id,login, client_pk[login],"")
-        print("!!!!!!!!!!!!!!created new client")
-        clients.append(newclient)
+        #newclient = myclient(_id,login, client_pk[login],"")
+        #print("!!!!!!!!!!!!!!created new client")
+        #clients.append(newclient)
         #send_available_clients(sock,_id)
         #print("done sending available clients")
         return login,password
@@ -275,6 +275,9 @@ def chat_server():
 
     print("neuron server started on port " + str(PORT))
 
+    pem_ca_key = open('key.pem' , 'rb').read()
+    ca_key = serialization.load_pem_private_key(pem_ca_key, password = None,backend = default_backend())
+
     while 1:
         ready_to_read,ready_to_write,in_error = select.select(SOCKET_LIST,[],[],0)
 
@@ -308,9 +311,15 @@ def chat_server():
                     elif data[3:6] == 'msg' : 
                         print("gonna wait for msg")
                         reciever = recv_msg(sock)
-                        print("gonna transmit msg")
-                        transmit_msg(_id,reciever,sock)
-                        print("done transmitting l msg")
+                        if len(reciever) == 0:
+                            print("gonna broadcast to all")
+                            msg= recv_msg(sock)
+                            msg = decrypt(ca_key,msg)
+                            broadcast(SERVER_SOCKET, sock,msg)
+                        else:
+                            print("gonna transmit msg")
+                            transmit_msg(_id,reciever,sock)
+                            print("done transmitting l msg")
                     elif data[3:6] == 'cus' : 
                         print("gonna send connected users ")
                         send_available_clients(sock, _id)
