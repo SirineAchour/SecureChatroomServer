@@ -258,7 +258,7 @@ def transmit_msg(_id,receiver,sock) :
     print("client cocket : ")
     print(client_sockets[receiver])
     if client_sockets[receiver]:
-        print(client_sockets[receiver].)
+        print(client_sockets[receiver].getpeername())
     send_msg(client_sockets[receiver],msg)
 
 def logout_user(sock, _id):
