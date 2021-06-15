@@ -39,9 +39,9 @@ class LdapService:
             "objectClass": [b"inetOrgPerson",b"person"],
             "uid": [user.name.encode('utf-8')],
             "sn": [user.surname.encode('utf-8')],
-            "givenName": [user.public_key.encode('utf-8')], # public key
+            "givenName": [user.name.encode('utf-8')],
             "cn": [name_surname.encode('utf-8')],
-            "displayName": [user.certificate.encode('utf-8')], # certificate
+            "displayName": [name_surname.encode('utf-8')],
             "userPassword": [ user.password.encode('utf-8')],
             }
         #USE "strongAuthenticationUser" objectClass for Certification, it needs a binary file,
