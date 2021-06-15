@@ -311,6 +311,7 @@ def chat_server():
                     elif data[3:6] == 'msg' : 
                         print("gonna wait for msg")
                         reciever = recv_msg(sock)
+                        print("receiver = "+str(reciever))
                         if len(reciever) == 0:
                             print("gonna broadcast to all")
                             msg= recv_msg(sock)
