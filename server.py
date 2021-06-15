@@ -252,7 +252,7 @@ def logout_user(sock, _id):
     for index,client in enumerate(clients) :
         if client.ind == _id and client_sockets[client.login] == sock:
             #remove client
-            broadcast(SOCKET_LIST.index(0),None, "\033[91m"+"\n"+client.login+" logged out\n"+"\033[0m")
+            broadcast(SOCKET_LIST[0],None, "\033[91m"+"\n"+client.login+" logged out\n"+"\033[0m")
             clients.pop(index)
             client_sockets.pop(index)
             SOCKET_LIST.remove(sock)
