@@ -16,7 +16,7 @@ services:
       OPENLDAP_ROOT_DN_PREFIX: "cn=Manager"
     volumes:
       - ./data:/etc/data
-    command: "echo 'dn: ou=Users,dc=chat, bash -c dc=app'> ou.ldif && echo 'objectClass: organizationalUnit'>> ou.ldif && echo 'ou: Users'>> ou.ldif && ldapadd -x -D cn=Manager,dc=chat,dc=app -wchatroomsupersecret -f ./data/ou.ldif && rm ./ou.ldif"
+    command: "echo 'dn: ou=Users,dc=chat, bash -c dc=app' > ou.ldif && echo 'objectClass: organizationalUnit'>> ou.ldif && echo 'ou: Users'>> ou.ldif && ldapadd -x -D cn=Manager,dc=chat,dc=app -wchatroomsupersecret -f ./data/ou.ldif && rm ./ou.ldif"
 #    command: "ldapadd -x -D cn=Manager,dc=chat,dc=app -wPassword1 -f /etc/ou.ldif;"
 
   chat-server:
